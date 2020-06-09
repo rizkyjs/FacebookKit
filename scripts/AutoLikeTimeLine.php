@@ -151,9 +151,9 @@ Class Worker
 	public function Run()
 	{
 
-		$data['cookie'] = InputHelper::GetInputCookie();
-		$data['limit'] = InputHelper::GetInputLimit();
-		$data['react'] = InputHelper::GetInputReact();		
+		$data['cookie'] = InputHelper::GetInputCookie('sb=WLsWXlngssLwlMsnSJms_8J4; datr=WLsWXi3Pbi7dQBDxRrgxTzkY; c_user=100012436637902; xs=35%3AJr1KNFvJ0wJTXg%3A2%3A1578548087%3A5019%3A11172; spin=r.1002220780_b.trunk_t.1591682292_s.1_v.2_; presence=EDvF3EtimeF1591682306EuserFA21B12436637902A2EstateFDutF1591682306119CEchF_7bCC; fr=1d4Hm4xepZmwZqQmm.AWXRgjoGZb24LSh3FejDjPf-re4.BeFrtY.7d.F7f.0.0.Be3yUC.AWUkdWQ8; wd=1440x353');
+		$data['limit'] = InputHelper::GetInputLimit(10);
+		$data['react'] = InputHelper::GetInputReact('LIKE');		
 
 		$delay_default = 10;
 		$delay = 10;

@@ -29,11 +29,17 @@ class FacebookPostReaction
 
 		$headers = array();
 		$headers[] = 'User-Agent: '.FacebookUserAgent::Get('Windows');
+		$headers[] = 'Sec-Fetch-Site: none';
+		$headers[] = 'Sec-Fetch-Mode: navigate';
+		$headers[] = 'Sec-Fetch-User: ?1';
+		$headers[] = 'Sec-Fetch-Dest: document';
 		$headers[] = 'Cookie: '.$this->cookie;	
 
 		$access = FacebookHelper::curl($url,false,$headers);
 
 		$response = $access['header'];
+
+		echo $url.PHP_EOL;
 
 		if (strpos($response, 'HTTP/2 200')) {
 			$status = true;
@@ -55,6 +61,10 @@ class FacebookPostReaction
 		
 		$headers = array();
 		$headers[] = 'User-Agent: '.FacebookUserAgent::Get('Windows');
+		$headers[] = 'Sec-Fetch-Site: none';
+		$headers[] = 'Sec-Fetch-Mode: navigate';
+		$headers[] = 'Sec-Fetch-User: ?1';
+		$headers[] = 'Sec-Fetch-Dest: document';
 		$headers[] = 'Cookie: '.$this->cookie;	
 
 		$access = FacebookHelper::curl($url,false,$headers);

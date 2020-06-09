@@ -1,0 +1,9 @@
+#-------------------------
+# Composer
+#-------------------------
+#vendor/
+composer.lock
+
+# Log
+scripts/feedtimeline-data-Muhamad Irfan
+scripts/feedtimeline-data-Riedayme
