@@ -4,6 +4,11 @@ https://graph.facebook.com/me/home?fields=id&limit=1&access_token=EAAAAZAw4FxQIB
 -- reaction
 https://graph.facebook.com/1706112245_10207208047355275/reactions?type=WOW&method=post&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
 
+https://graph.facebook.com/me/home?fields=picture.type(large)&limit=1&access_token=EAAAAZAw4FxQIBAHZA7L1NVUhBTIsdLYOGS7ysZBKjSWfq1Usvc77qPyxQZCISZAEXxRNf0rZCyFFRihmsrtS8YxhC6k5ZC3x92F18MIgjjJE9ZCvPXJls7B2dr1qTIFZC0ueATW3ZCAD0UZBR2mSQBffAE3Ow0XACJ4c1uLju9eOMMLZCwZDZD
+
+-- reaction select
+https://mbasic.facebook.com/reactions/picker/?is_permalink=1&ft_id=701163620455822&origin_uri=https%3A%2F%2Fmbasic.facebook.com%2FRiedayme%2Fposts%2F701163620455822&av=100016865703374
+
 email
 read_custom_friendlists
 read_insights

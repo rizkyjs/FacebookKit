@@ -64,4 +64,33 @@ Class FacebookHelper
 		return $str[0];
 	}
 
+	public static function innerHTML($node)
+	{
+		$doc = new \DOMDocument();
+		foreach ($node->childNodes as $child) 
+		{
+			$doc->appendChild($doc->importNode($child, true));
+		}
+		return $doc->saveHTML();
+	}	
+
+	public static function GetDom($html)
+	{
+
+		$previous_value = libxml_use_internal_errors(TRUE);
+		$dom = new \DOMDocument;
+		$dom->loadHTML($html);
+		libxml_clear_errors();
+		libxml_use_internal_errors($previous_value);
+
+		return $dom;
+	}
+
+	public static function GetXpath($dom)
+	{
+
+		$xpath = new \DOMXPath($dom);
+		return $xpath;
+	}
+
 }

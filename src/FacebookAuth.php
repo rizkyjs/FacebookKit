@@ -3,20 +3,21 @@
 class FacebookAuth
 {
 
-	public static function AuthUsingCookie($cookie)
+	public function AuthUsingCookie($cookie)
 	{
 
 		$userid = FacebookCookie::GetUIDCookie($cookie);
 		if (empty($userid)) die("cookie tidak valid");
 
-		$accesstoken = FacebookAccessToken::GetTouchToken($cookie);
-		$userinfo = FacebookResourceUser::GetUserInfoByToken($accesstoken);
+		$access_token = FacebookAccessToken::GetTouchToken($cookie);
+		$userinfo = FacebookResourceUser::GetUserInfoByToken($access_token);
 
 		return [
 		'userid' => $userid,
 		'username' => $userinfo['username'], 
 		'photo' => $userinfo['photo'],
 		'cookie' => $cookie,
+		'access_token' => $access_token
 		];
 
 	}	
@@ -30,7 +31,7 @@ class FacebookAuth
 
 		$postdata = "email={$username}&pass={$password}";
 
-		$useragent = FacebookUserAgent::Linux();
+		$useragent = FacebookUserAgent::Get('Windows');
 
 		$login = FacebookHelper::curl($url,$postdata,false,false,$useragent);
 

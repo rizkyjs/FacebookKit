@@ -9,7 +9,7 @@ class FacebookResourceUser
 		$url = "https://graph.facebook.com/me?fields=name,picture&access_token={$token}";
 
 		$headers = array();
-		$headers[] = 'User-Agent: '.FacebookUserAgent::Linux();
+		$headers[] = 'User-Agent: '.FacebookUserAgent::Get('Windows');
 
 		$access = FacebookHelper::curl($url,false,$headers);
 
