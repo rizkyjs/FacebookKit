@@ -14,16 +14,24 @@ Class InputHelper
 
 		echo "Masukan Cookie : ".PHP_EOL;
 
-		return trim(fgets(STDIN));
+		$input = trim(fgets(STDIN));
+
+		return (!$input) ? die('Cookie Masih Kosong'.PHP_EOL) : $input;
 	}
 
 	public function GetInputLimit($data = false) {
 
 		if ($data) return $data;
 
-		echo "Masukan Limit Feed : ".PHP_EOL;
+		echo "Masukan Limit Feed (angka): ".PHP_EOL;
 
-		return trim(fgets(STDIN));
+		$input = trim(fgets(STDIN));
+
+		if (strval($input) !== strval(intval($input))) {
+			die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+		}
+
+		return (!$input) ? die('Limit Feed Masih Kosong'.PHP_EOL) : $input;
 	}
 
 	public function GetInputReact($data = false) {
@@ -32,7 +40,15 @@ Class InputHelper
 
 		echo "Masukan Reaksi yang dikirim : [LIKE, LOVE, CARE, HAHA, WOW, SAD, ANGRY, UNREACT]".PHP_EOL;
 
-		return trim(fgets(STDIN));
+		$input = trim(fgets(STDIN));
+
+		$react = ['LIKE', 'LOVE', 'CARE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'UNREACT'];
+
+		if (!in_array($input,$react)) {
+			die("Reaksi Pilihan tidak valid".PHP_EOL);
+		}
+
+		return (!$input) ? die('Reaction Masih Kosong'.PHP_EOL) : $input;
 	}	
 }
 
@@ -84,13 +100,20 @@ Class FacebookAutoReactTimeLine
 			'userid' => $datapost['userid'], 
 			'postid' => $datapost['postid'], 
 			'type' => $this->react
-		]);
+			]);
 
 		if ($process != false) {
-			echo "Sukses React Post {$process['url']} <-------------".PHP_EOL;
-			self::SaveLog($this->username,$datapost['postid']);
+
+			if ($process == 'URL_NOTFOUND') {
+				echo "[!Gagal!] URL REact pada post {$datapost['postid']} tidak ditemukan.".PHP_EOL;	
+			}elseif ($process == 'UNREACT') {
+				echo "[!Gagal!] React Post {$process['url']}, Kemungkinan post sudah diberi react.".PHP_EOL;	
+			}else{
+				echo "Sukses React Post {$process['url']} <-------------".PHP_EOL;
+				self::SaveLog($this->username,$datapost['postid']);
+			}
 		}else{
-			echo "Gagal".PHP_EOL;
+			echo "[!Gagal!] React Post {$process['url']}, Kesalahan pada kode.".PHP_EOL;
 		}
 	}
 
@@ -114,10 +137,10 @@ Class FacebookAutoReactTimeLine
 		}
 
 		/* Update Log Data Fresh Story */
-		if (count($datafeed) != count($ReadLog) - 1) {
-			echo "Update Log Feed <-------------".PHP_EOL;
-			self::SaveLog($this->username,implode(PHP_EOL, $freshlog),false);
-		}
+		// if (count($datafeed) != count($ReadLog) - 1) {
+		// 	echo "Update Log Feed <-------------".PHP_EOL;
+		// 	self::SaveLog($this->username,implode(PHP_EOL, $freshlog),false);
+		// }
 
 		return $results;
 	}
@@ -151,9 +174,9 @@ Class Worker
 	public function Run()
 	{
 
-		$data['cookie'] = InputHelper::GetInputCookie('sb=WLsWXlngssLwlMsnSJms_8J4; datr=WLsWXi3Pbi7dQBDxRrgxTzkY; c_user=100012436637902; xs=35%3AJr1KNFvJ0wJTXg%3A2%3A1578548087%3A5019%3A11172; spin=r.1002220780_b.trunk_t.1591682292_s.1_v.2_; presence=EDvF3EtimeF1591682306EuserFA21B12436637902A2EstateFDutF1591682306119CEchF_7bCC; fr=1d4Hm4xepZmwZqQmm.AWXRgjoGZb24LSh3FejDjPf-re4.BeFrtY.7d.F7f.0.0.Be3yUC.AWUkdWQ8; wd=1440x353');
-		$data['limit'] = InputHelper::GetInputLimit(10);
-		$data['react'] = InputHelper::GetInputReact('LIKE');		
+		$data['cookie'] = InputHelper::GetInputCookie('sb=IddBXhX0VL6oJlj52JyiTuvJ; datr=IddBXutHOFSYJe25zc1vGxsv; c_user=100016865703374; xs=29%3AOl2lBtCHN_uMRA%3A2%3A1591565467%3A17482%3A10881; spin=r.1002218250_b.trunk_t.1591656797_s.1_v.2_; _fbp=fb.1.1591658868127.1122750508; m_pixel_ratio=1; act=1591661888252%2F0; fr=0SE9GIw95RNs7jw6d.AWVm8KZ6szZ-cj59NxUQvLqq-PE.BeQdYM.OF.F7e.0.0.Be3y0R.AWUbwZtR; presence=EDvF3EtimeF1591684372EuserFA21B16865703374A2EstateFDsb2F1591615022594EatF1591616159687Et3F_5b_5dEutc3F1591616159692G591684372009CEchF_7bCC; wd=1600x347');
+		$data['limit'] = InputHelper::GetInputLimit();
+		$data['react'] = InputHelper::GetInputReact();		
 
 		$delay_default = 10;
 		$delay = 10;

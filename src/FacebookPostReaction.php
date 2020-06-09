@@ -4,7 +4,7 @@ class FacebookPostReaction
 {
 
 	public $cookie;	
-	public $access_token;	
+	public $fb_dtsg;
 
 	public function Auth($data,$type = false) 
 	{
@@ -15,7 +15,6 @@ class FacebookPostReaction
 			$process = FacebookAuth::AuthUsingCookie($data);
 
 			$this->cookie = $process['cookie'];
-			$this->access_token = $process['access_token'];			
 		}else{
 			die("auth type not selected");
 		}
@@ -25,7 +24,8 @@ class FacebookPostReaction
 	{
 
 		$url = self::GetReactionURL($data);
-		if (!$url) die("Tidak ditemukan url react");
+		if (!$url OR $url == 'UNREACT') return 'URL_NOTFOUND';
+		if ($url == 'UNREACT') return 'UNREACT';
 
 		$headers = array();
 		$headers[] = 'User-Agent: '.FacebookUserAgent::Get('Windows');
@@ -39,7 +39,7 @@ class FacebookPostReaction
 
 		$response = $access['header'];
 
-		echo $url.PHP_EOL;
+		// echo $url.PHP_EOL;
 
 		if (strpos($response, 'HTTP/2 200')) {
 			$status = true;
@@ -47,9 +47,9 @@ class FacebookPostReaction
 			$status = false;
 		}
 		return [
-			'status' => $status,
-			'id' => $data['postid'],
-			'url' => "https://www.facebook.com/{$data['postid']}"
+		'status' => $status,
+		'id' => $data['postid'],
+		'url' => "https://www.facebook.com/{$data['postid']}"
 		];
 	}
 
@@ -86,19 +86,19 @@ class FacebookPostReaction
 
 				if (!strpos($url, '/story.php')) {
 
-					$type = self::GetReactionType($url);
+					$type = self::GetReactionTypeForScraping($url);
 
 					$reaction_data[$type] = html_entity_decode(trim($url));
 				}
 			}
 
-			return (!empty($reaction_data[$data['type']])) ? $reaction_data[$data['type']] : $reaction_data['UNREACT'];
+			return (!empty($reaction_data[$data['type']])) ? $reaction_data[$data['type']] : 'UNREACT';
 		}
 
 		return false;		
 	}
 
-	public function GetReactionType($url)
+	public function GetReactionTypeForScraping($url)
 	{
 
 		$type = false;
@@ -118,6 +118,64 @@ class FacebookPostReaction
 			$type = 'ANGRY';
 		}elseif (strpos($url, 'reaction_type=0&')) {
 			$type = 'UNREACT';
+		}
+
+		return $type;
+	}
+
+	/**
+	 * Reaction by touch.facebook.com
+	 */
+	public function ReactPostByTouch($data)
+	{
+
+		$url = 'https://touch.facebook.com/ufi/reaction/';
+
+		if (!$this->fb_dtsg) {
+			$this->fb_dtsg = FacebookDTSG::GetFromProfile($this->cookie);
+		}
+		$reaction_type = self::GetReactionTypeForTouch($data['type']);
+		$postdata = "reaction_type={$reaction_type}&ft_ent_identifier={$data['postid']}&fb_dtsg={$this->fb_dtsg}";
+
+		$headers = array();
+		$headers[] = 'User-Agent: '.FacebookUserAgent::Get('Windows');
+		$headers[] = 'Cookie: '.$this->cookie;	
+
+		$access = FacebookHelper::curl($url,$postdata,$headers);
+
+		$response = $access['header'];
+
+		if (strpos($response, '200 OK')) {
+			$status = true;
+		}else{
+			$status = false;
+		}
+		return [
+		'status' => $status,
+		'id' => $data['postid'],
+		'url' => "https://www.facebook.com/{$data['postid']}"
+		];
+	}
+
+	public function GetReactionTypeForTouch($data)
+	{
+		$type = false;
+		if ($data == 'LIKE') {
+			$type = '1';
+		}elseif ($data == 'LOVE') {
+			$type = '2';
+		}elseif ($data == 'CARE') {
+			$type = '1';
+		}elseif ($data == 'HAHA') {
+			$type = '4';
+		}elseif ($data == 'WOW') {
+			$type = '3';
+		}elseif ($data == 'SAD') {
+			$type = '7';
+		}elseif ($data == 'ANGRY') {
+			$type = '8';
+		}elseif ($data == 'UNREACT') {
+			$type = '0';
 		}
 
 		return $type;

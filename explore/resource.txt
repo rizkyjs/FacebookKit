@@ -4,11 +4,39 @@ https://graph.facebook.com/me/home?fields=id&limit=1&access_token=EAAAAZAw4FxQIB
 -- reaction
 https://graph.facebook.com/1706112245_10207208047355275/reactions?type=WOW&method=post&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
 
-https://graph.facebook.com/me/home?fields=picture.type(large)&limit=1&access_token=EAAAAZAw4FxQIBAHZA7L1NVUhBTIsdLYOGS7ysZBKjSWfq1Usvc77qPyxQZCISZAEXxRNf0rZCyFFRihmsrtS8YxhC6k5ZC3x92F18MIgjjJE9ZCvPXJls7B2dr1qTIFZC0ueATW3ZCAD0UZBR2mSQBffAE3Ow0XACJ4c1uLju9eOMMLZCwZDZD
+-- post comment
+https://graph.facebook.com/701353603770157/comments?method=POST&message=aye&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
 
 -- reaction select
 https://mbasic.facebook.com/reactions/picker/?is_permalink=1&ft_id=701163620455822&origin_uri=https%3A%2F%2Fmbasic.facebook.com%2FRiedayme%2Fposts%2F701163620455822&av=100016865703374
 
+- all api url
+$url = "https://graph.facebook.com/{$groupid}/feed";
+$data = "message=" . spin($read['message'])
+. "&fields=permalink_url&access_token={$read[token]}";
+$curl = file_get_contents_curl($url,$data);
+$curl = file_get_contents_curl("https://graph.facebook.com/{$post->id}/reactions?type={$read['reaction']}&method=post&access_token={$read['token']}");
+
+-- user info
+https://graph.facebook.com/me/home?access_token=EAAAAZAw4FxQIBADZB4lN5YzJFvFJhlE54dzakDkvwZAMX7ZAd9G20FgZAwIS0zxFYZAV90w65n2gZCH6Q57u7qsoQ5fXyjz8zPyRxv8F7gTlVAi4OPlMQNs8OQvzAyqZAsTuY8vEx0YhDscCNgJviEYl0HVGDX87U2hza9NkdIZCFhwZDZD
+
+-- search
+https://graph.facebook.com/search?q={$keyword}&limit={$max_process}&type=user&access_token={$token}
+https://graph.facebook.com/search?q={$keyword}&limit={$max_process}&type=page&access_token={$token}
+https://graph.facebook.com/search?q=programmer&limit=5&type=group&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
+
+-- read post
+https://graph.facebook.com/701353603770157/?fields=comments&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
+
+https://graph.facebook.com/{$postid}?fields=reactions.summary(true).limit(100)&access_token={$token}
+https://graph.facebook.com/462764390497214/?fields=name&access_token=
+
+-- comment on post
+  $url = "https://graph.facebook.com/{$postid}/comments";
+  $data = "message=" . urlencode($message)
+  . "&fields=permalink_url&access_token={$token}";
+  $curl = file_get_contents_curl($url,$data);
+  
 email
 read_custom_friendlists
 read_insights

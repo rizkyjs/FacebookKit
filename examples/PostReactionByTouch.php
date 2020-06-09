@@ -6,7 +6,6 @@ use Riedayme\FacebookKit\FacebookPostReaction;
 $cookie = 'yourcookie';
 
 $data = [
-  'userid' => 'userid', 
   'postid' => 'postid', 
   'type' => 'WOW' // LIKE, LOVE, CARE, HAHA, WOW, SAD, ANGRY, UNREACT
 ];
@@ -14,7 +13,7 @@ $data = [
 $Post = new FacebookPostReaction();
 $Post->Auth($cookie,'cookie');
 
-$results =$Post->ReactPostByScraping($data);
+$results =$Post->ReactPostByTouch($data);
 
 echo "<pre>";
 var_dump($results);
