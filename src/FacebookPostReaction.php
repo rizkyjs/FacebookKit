@@ -43,7 +43,7 @@ class FacebookPostReaction
 		return [
 			'status' => $status,
 			'id' => $data['postid'],
-			'url' => "https://www.facebook.com/{$data['userid']}/posts/{$data['postid']}"
+			'url' => "https://www.facebook.com/{$data['postid']}"
 		];
 	}
 

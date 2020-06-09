@@ -27,6 +27,6 @@ array(3) {
   ["id"]=>
   string(15) "701158903789627"
   ["url"]=>
-  string(62) "https://www.facebook.com/100016865703374/posts/701158903789627"
+  string(62) "https://www.facebook.com/701158903789627"
 }
 */

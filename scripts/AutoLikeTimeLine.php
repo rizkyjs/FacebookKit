@@ -87,7 +87,7 @@ Class FacebookAutoReactTimeLine
 		]);
 
 		if ($process != false) {
-			echo "Sukses React Post {$datapost['postid']} <-------------".PHP_EOL;
+			echo "Sukses React Post {$process['url']} <-------------".PHP_EOL;
 			self::SaveLog($this->username,$datapost['postid']);
 		}else{
 			echo "Gagal".PHP_EOL;
@@ -151,11 +151,9 @@ Class Worker
 	public function Run()
 	{
 
-		$cookie = 'sb=Q5FYXuL7Zf-hHWoDcYY-UiBh; datr=Q5FYXhRV37LHftrlureny0a1; c_user=100016865703374; xs=31%3AOt4FcPq7AR7waQ%3A2%3A1586409168%3A17482%3A10881; _fbp=fb.1.1591218870915.1067997829; spin=r.1002218759_b.trunk_t.1591667764_s.1_v.2_; fr=1f0FKotkon9e6deNQ.AWX3wj5OodCG99YZgOCHcfTAQ_o.BeWJFD.Xk.F7d.0.0.Be3woM.AWXXzYws; presence=EDvF3EtimeF1591675856EuserFA21B16865703374A2EstateFDutF1591675856295CEchF_7bCC; act=1591675859332%2F0; wd=1440x351';
-
-		$data['cookie'] = InputHelper::GetInputCookie($cookie);
-		$data['limit'] = InputHelper::GetInputLimit('5');
-		$data['react'] = InputHelper::GetInputReact('WOW');		
+		$data['cookie'] = InputHelper::GetInputCookie();
+		$data['limit'] = InputHelper::GetInputLimit();
+		$data['react'] = InputHelper::GetInputReact();		
 
 		$delay_default = 10;
 		$delay = 10;
