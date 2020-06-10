@@ -1,4 +1,9 @@
 <?php  
+/**
+* Facebook Auto Reaction TimeLine v1.0
+* Last Update 10 Juni 2020
+* Author : Faanteyki
+*/
 require "../vendor/autoload.php";
 
 use Riedayme\FacebookKit\FacebookAuth;
@@ -207,7 +212,7 @@ Class FacebookAutoReactTimeLine
 			'userid' => $datapost['userid'], 
 			'postid' => $datapost['postid'], 
 			'type' => $type
-			]);
+		]);
 
 		if ($process != false) {
 
@@ -269,6 +274,8 @@ Class Worker
 {
 	public function Run()
 	{
+
+		echo " --- Facebook Auto Reaction TimeLine v1.0 ---".PHP_EOL;
 
 		$data['cookie'] = InputHelper::GetInputCookie();
 		$data['limit'] = InputHelper::GetInputLimit();

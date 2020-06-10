@@ -1,4 +1,9 @@
 <?php  
+/**
+* Facebook Auto Reaction Group v1.0
+* Last Update 10 Juni 2020
+* Author : Faanteyki
+*/
 require "../vendor/autoload.php";
 
 use Riedayme\FacebookKit\FacebookAuth;
@@ -257,7 +262,7 @@ Class FacebookAutoReactGroup
 		$results =$Feed->GetFeedGroupByToken([
 			'groupid' => $this->groupid,
 			'limit' => $this->limit
-			]);
+		]);
 
 		echo "Berhasil Mendapatkan Feed <-------------".PHP_EOL;
 
@@ -278,7 +283,7 @@ Class FacebookAutoReactGroup
 			'userid' => $datapost['userid'], 
 			'postid' => $datapost['postid'], 
 			'type' => $type
-			]);
+		]);
 
 		if ($process != false) {
 
@@ -340,6 +345,8 @@ Class Worker
 {
 	public function Run()
 	{
+
+		echo " --- Facebook Auto Reaction Group v1.0 ---".PHP_EOL;
 
 		$data['cookie'] = InputHelper::GetInputCookie();
 
