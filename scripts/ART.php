@@ -240,7 +240,7 @@ Class FacebookAutoReactTimeLine
 		$results = array();
 		foreach ($datafeed as $feed) {
 			if (is_array($ReadLog) AND in_array($feed['postid'], $ReadLog)) {
-				echo "Skip {$feed['postid']}, feed sudah di proses. ".PHP_EOL;
+				echo "Skip {$feed['postid']}, post sudah di proses. ".PHP_EOL;
 				continue;
 			}
 
