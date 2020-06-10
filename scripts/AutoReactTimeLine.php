@@ -36,8 +36,6 @@ Class InputHelper
 			}
 		}	
 
-		$input = strtolower(trim(fgets(STDIN)));				
-
 		echo "Masukan Cookie : ".PHP_EOL;
 
 		$input = trim(fgets(STDIN));

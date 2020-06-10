@@ -14,7 +14,7 @@ Class InputHelper
 
 		if ($data) return $data;
 
-		$CheckPreviousCookie = FacebookAutoReactGroup::CheckPreviousCookie();
+		$CheckPreviousCookie = FacebookAutoReactTimeLine::CheckPreviousCookie();
 
 		if ($CheckPreviousCookie) {
 			echo "Anda Memiliki Cookie yang tersimpan pilih angkanya dan gunakan kembali : ".PHP_EOL;
@@ -26,16 +26,16 @@ Class InputHelper
 			echo "Pilihan Anda : ".PHP_EOL;
 
 			$input = strtolower(trim(fgets(STDIN)));			
-		}
 
-		if ($input != 'x') {
+			if ($input != 'x') {
 
-			if (strval($input) !== strval(intval($input))) {
-				die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+				if (strval($input) !== strval(intval($input))) {
+					die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+				}
+
+				return $input;
 			}
-
-			return $input;
-		}
+		}	
 
 		echo "Masukan Cookie : ".PHP_EOL;
 
