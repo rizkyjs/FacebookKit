@@ -343,10 +343,10 @@ Class Worker
 
 		$data['cookie'] = InputHelper::GetInputCookie();
 
-		$delay_default = 60;
-		$delay = 60;
-		$delayfeed_default = 10;
-		$delayfeed = 10;
+		$delay_default = 10;
+		$delay = 10;
+		$delayfeed_default = 60;
+		$delayfeed = 60;
 
 		/* Call Class */
 		$Working = new FacebookAutoReactGroup();
