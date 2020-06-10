@@ -24,7 +24,7 @@ class FacebookPostReaction
 	{
 
 		$url = self::GetReactionURL($data);
-		if (!$url OR $url == 'UNREACT') return 'URL_NOTFOUND';
+		if (!$url) return 'URL_NOTFOUND';
 		if ($url == 'UNREACT') return 'UNREACT';
 
 		$headers = array();

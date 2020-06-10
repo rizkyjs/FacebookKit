@@ -2,6 +2,7 @@
 require "../vendor/autoload.php";
 
 use Riedayme\FacebookKit\FacebookAuth;
+use Riedayme\FacebookKit\FacebookCookie;
 use Riedayme\FacebookKit\FacebookChecker;
 use Riedayme\FacebookKit\FacebookFeedTimeLine;
 use Riedayme\FacebookKit\FacebookPostReaction;
@@ -11,6 +12,29 @@ Class InputHelper
 	public function GetInputCookie($data = false) {
 
 		if ($data) return $data;
+
+		$CheckPreviousCookie = FacebookAutoReactTimeLine::CheckPreviousCookie();
+
+		if ($CheckPreviousCookie) {
+			echo "Anda Memiliki Cookie yang tersimpan pilih angkanya dan gunakan kembali : ".PHP_EOL;
+			foreach ($CheckPreviousCookie as $key => $cookie) {
+				echo "[{$key}]".$cookie['username'].PHP_EOL;
+			}
+			echo "[x] Masukan cookie baru".PHP_EOL;
+
+			echo "Pilihan Anda : ".PHP_EOL;
+
+			$input = strtolower(trim(fgets(STDIN)));			
+		}
+
+		if ($input != 'x') {
+
+			if (strval($input) !== strval(intval($input))) {
+				die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+			}
+
+			return $input;
+		}
 
 		echo "Masukan Cookie : ".PHP_EOL;
 
@@ -40,7 +64,7 @@ Class InputHelper
 
 		echo "Masukan Reaksi yang dikirim : [LIKE, LOVE, CARE, HAHA, WOW, SAD, ANGRY, UNREACT]".PHP_EOL;
 
-		$input = trim(fgets(STDIN));
+		$input = strtoupper(trim(fgets(STDIN)));
 
 		$react = ['LIKE', 'LOVE', 'CARE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'UNREACT'];
 
@@ -66,14 +90,88 @@ Class FacebookAutoReactTimeLine
 		echo "Masuk Akun <-------------".PHP_EOL;
 		echo "Check Login <-------------".PHP_EOL;
 
-		$auth = new FacebookAuth();
-		$results =$auth->AuthUsingCookie($data['cookie']);
+		$userid = FacebookCookie::GetUIDCookie($data['cookie']);
+
+		if (!$userid) {
+			$results = self::ReadPreviousCookie($data['cookie']);
+		}else{			
+
+			$auth = new FacebookAuth();
+			$results =$auth->AuthUsingCookie($data['cookie']);
+
+			self::SaveCookie($results);
+		}
 
 		$this->username = $results['username'];		
 		$this->cookie = $results['cookie'];
 		$this->limit = $data['limit'];
-		$this->react = $data['react'];		
+		$this->react = $data['react'];
+
 	}
+
+	public function SaveCookie($data){
+
+		$filename = 'log-cookie.json';
+
+		if (file_exists($filename)) {
+			$read = file_get_contents($filename);
+			$read = json_decode($read,true);
+			$dataexist = false;
+			foreach ($read as $key => $logdata) {
+				if ($logdata['userid'] == $data['userid']) {
+					$inputdata[] = $data;
+					$dataexist = true;
+				}else{
+					$inputdata[] = $logdata;
+				}
+			}
+
+			if (!$dataexist) {
+				$inputdata[] = $data;
+			}
+		}else{
+			$inputdata[] = $data;
+		}
+
+		return file_put_contents($filename, json_encode($inputdata,JSON_PRETTY_PRINT));
+	}
+
+	public function CheckPreviousCookie()
+	{
+
+		$filename = 'log-cookie.json';
+		if (file_exists($filename)) {
+			$read = file_get_contents($filename);
+			$read = json_decode($read,TRUE);
+			foreach ($read as $key => $logdata) {
+				$inputdata[] = $logdata;
+			}
+
+			return $inputdata;
+		}else{
+			return false;
+		}
+	}
+
+	public function ReadPreviousCookie($data)
+	{
+
+		$filename = 'log-cookie.json';
+		if (file_exists($filename)) {
+			$read = file_get_contents($filename);
+			$read = json_decode($read,TRUE);
+			foreach ($read as $key => $logdata) {
+				if ($key == $data) {
+					$inputdata = $logdata;
+					break;
+				}
+			}
+
+			return $inputdata;
+		}else{
+			die("file tidak ditemukan");
+		}
+	}	
 
 	public function GetFeed()
 	{
@@ -94,6 +192,8 @@ Class FacebookAutoReactTimeLine
 	{
 		echo "Proses React Post {$datapost['userid']}||{$datapost['postid']} <-------------".PHP_EOL;
 
+		$datapost['url'] = "https://www.facebook.com/{$datapost['postid']}";
+		
 		$react = new FacebookPostReaction();
 		$react->Auth($this->cookie,'cookie');
 		$process = $react->ReactPostByScraping([
@@ -105,12 +205,13 @@ Class FacebookAutoReactTimeLine
 		if ($process != false) {
 
 			if ($process == 'URL_NOTFOUND') {
-				echo "[!Gagal!] URL REact pada post {$datapost['postid']} tidak ditemukan.".PHP_EOL;	
+				echo "[!Gagal!] URL React pada post {$datapost['url']} tidak ditemukan.".PHP_EOL;	
 			}elseif ($process == 'UNREACT') {
-				echo "[!Gagal!] React Post {$process['url']}, Kemungkinan post sudah diberi react.".PHP_EOL;	
+				echo "[!Gagal!] React Post {$datapost['url']}, Kemungkinan post sudah diberi react.".PHP_EOL;	
+				self::SaveLog($datapost['postid']);	
 			}else{
 				echo "Sukses React Post {$process['url']} <-------------".PHP_EOL;
-				self::SaveLog($this->username,$datapost['postid']);
+				self::SaveLog($datapost['postid']);
 			}
 		}else{
 			echo "[!Gagal!] React Post {$process['url']}, Kesalahan pada kode.".PHP_EOL;
@@ -174,7 +275,7 @@ Class Worker
 	public function Run()
 	{
 
-		$data['cookie'] = InputHelper::GetInputCookie('sb=IddBXhX0VL6oJlj52JyiTuvJ; datr=IddBXutHOFSYJe25zc1vGxsv; c_user=100016865703374; xs=29%3AOl2lBtCHN_uMRA%3A2%3A1591565467%3A17482%3A10881; spin=r.1002218250_b.trunk_t.1591656797_s.1_v.2_; _fbp=fb.1.1591658868127.1122750508; m_pixel_ratio=1; act=1591661888252%2F0; fr=0SE9GIw95RNs7jw6d.AWVm8KZ6szZ-cj59NxUQvLqq-PE.BeQdYM.OF.F7e.0.0.Be3y0R.AWUbwZtR; presence=EDvF3EtimeF1591684372EuserFA21B16865703374A2EstateFDsb2F1591615022594EatF1591616159687Et3F_5b_5dEutc3F1591616159692G591684372009CEchF_7bCC; wd=1600x347');
+		$data['cookie'] = InputHelper::GetInputCookie();
 		$data['limit'] = InputHelper::GetInputLimit();
 		$data['react'] = InputHelper::GetInputReact();		
 

@@ -6,6 +6,8 @@ https://graph.facebook.com/1706112245_10207208047355275/reactions?type=WOW&metho
 
 -- post comment
 https://graph.facebook.com/701353603770157/comments?method=POST&message=aye&access_token=EAAAAZAw4FxQIBAElafKg4s32XtMxE5POc9hAHgggZBSmkK0cRPkZBSTpKWGhjpz7snU8XItOqqQwWS02ZBN8NjcMwe9aZAoVoHa5gYNQUPWckb3JNzUMRCobPwpzJ817f3eh0FZCpzVmvv78VyMNGZB51iMQZA5pi05dShw2GWVrAgZDZD
+https://graph.facebook.com/{$postid}/comments?method=POST&attachment_url={$imagesrand}&message={$sendmessage}&access_token={$token}
+https://graph.facebook.com/{$postid}/comments?method=POST&message={$sendmessage}&access_token={$token}
 
 -- reaction select
 https://mbasic.facebook.com/reactions/picker/?is_permalink=1&ft_id=701163620455822&origin_uri=https%3A%2F%2Fmbasic.facebook.com%2FRiedayme%2Fposts%2F701163620455822&av=100016865703374
@@ -30,6 +32,27 @@ https://graph.facebook.com/701353603770157/?fields=comments&access_token=EAAAAZA
 
 https://graph.facebook.com/{$postid}?fields=reactions.summary(true).limit(100)&access_token={$token}
 https://graph.facebook.com/462764390497214/?fields=name&access_token=
+
+-- friend
+https://graph.facebook.com/me/friends/{$userid}?method=post&access_token={$token}
+https://graph.facebook.com/{$people}/feed?fields=id,permalink_url,object_id&limit={$max}&access_token={$token}
+
+-- accept and reject
+https://graph.facebook.com/me/friends/{$userid}?method=POST&access_token={$token}
+https://graph.facebook.com/me/friends/{$userid}?method=DELETE&access_token={$token}
+
+-- like 
+https://graph.facebook.com/{$row->id}/likes?method=post&access_token={$token}
+
+-- group
+https://graph.facebook.com/{$groupid}/members?member={$userid}&method=POST&access_token={$token}
+https://graph.facebook.com/{$groupid}/members?member={$userid}&method=DELETE&access_token={$token}
+
+-- post delete
+https://graph.facebook.com/{$postid}/?method=DELETE&access_token={$token}
+
+-- send post to friend
+https://graph.facebook.com/{$targetid}/feed
 
 -- comment on post
   $url = "https://graph.facebook.com/{$postid}/comments";
