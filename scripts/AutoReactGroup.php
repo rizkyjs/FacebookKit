@@ -223,6 +223,8 @@ Class FacebookAutoReactGroup
 
 		$results =$Group->GetGroupListByScraping();
 
+		echo "Ditemukan ".count($results)." Group <-------------".PHP_EOL;
+
 		$search = InputHelper::GetInputGroupName();
 
 		$search_results = array();
@@ -341,8 +343,8 @@ Class Worker
 
 		$data['cookie'] = InputHelper::GetInputCookie();
 
-		$delay_default = 10;
-		$delay = 10;
+		$delay_default = 60;
+		$delay = 60;
 		$delayfeed_default = 10;
 		$delayfeed = 10;
 
