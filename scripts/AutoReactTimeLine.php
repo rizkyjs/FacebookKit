@@ -25,16 +25,18 @@ Class InputHelper
 			echo "Pilihan Anda : ".PHP_EOL;
 
 			$input = strtolower(trim(fgets(STDIN)));			
-		}
 
-		if ($input != 'x') {
+			if ($input != 'x') {
 
-			if (strval($input) !== strval(intval($input))) {
-				die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+				if (strval($input) !== strval(intval($input))) {
+					die("Salah memasukan format, pastikan hanya angka".PHP_EOL);
+				}
+
+				return $input;
 			}
+		}	
 
-			return $input;
-		}
+		$input = strtolower(trim(fgets(STDIN)));				
 
 		echo "Masukan Cookie : ".PHP_EOL;
 
