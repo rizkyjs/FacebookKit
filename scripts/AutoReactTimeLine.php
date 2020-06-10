@@ -223,33 +223,25 @@ Class FacebookAutoReactTimeLine
 
 		echo "Sync Feed <-------------".PHP_EOL;
 
-		$ReadLog = self::ReadLog($this->username);
+		$ReadLog = self::ReadLog();
 
 		$results = array();
-		$freshlog = array();
 		foreach ($datafeed as $feed) {
 			if (is_array($ReadLog) AND in_array($feed['postid'], $ReadLog)) {
 				echo "Skip {$feed['postid']}, feed sudah di proses. ".PHP_EOL;
-				$freshlog[] = $feed['postid'];
 				continue;
 			}
 
 			$results[] = $feed;
 		}
 
-		/* Update Log Data Fresh Story */
-		// if (count($datafeed) != count($ReadLog) - 1) {
-		// 	echo "Update Log Feed <-------------".PHP_EOL;
-		// 	self::SaveLog($this->username,implode(PHP_EOL, $freshlog),false);
-		// }
-
 		return $results;
 	}
 
-	public function ReadLog($identity)
+	public function ReadLog()
 	{		
 
-		$logfilename = "feedtimeline-data-{$identity}";
+		$logfilename = "feedtimeline-data-{$this->username}";
 		$log_url = array();
 		if (file_exists($logfilename)) 
 		{
@@ -260,13 +252,9 @@ Class FacebookAutoReactTimeLine
 		return $log_url;
 	}
 
-	public function SaveLog($identity,$datastory,$append = true)
+	public function SaveLog($datapost)
 	{
-		if ($append) {
-			return file_put_contents("feedtimeline-data-{$identity}", $datastory.PHP_EOL, FILE_APPEND);
-		}else{			
-			return file_put_contents("feedtimeline-data-{$identity}", $datastory.PHP_EOL);
-		}
+		return file_put_contents("feedtimeline-data-{$this->username}", $datapost.PHP_EOL, FILE_APPEND);
 	}
 }
 
