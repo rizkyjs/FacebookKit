@@ -14,7 +14,7 @@ Class InputHelper
 
 		if ($data) return $data;
 
-		$CheckPreviousCookie = FacebookAutoReactTimeLine::CheckPreviousCookie();
+		$CheckPreviousCookie = FacebookAutoReactGroup::CheckPreviousCookie();
 
 		if ($CheckPreviousCookie) {
 			echo "Anda Memiliki Cookie yang tersimpan pilih angkanya dan gunakan kembali : ".PHP_EOL;
@@ -264,7 +264,7 @@ Class FacebookAutoReactGroup
 		return self::SyncPost($results);
 	}
 
-	public function LikePost($datapost)
+	public function ReactPost($datapost)
 	{
 
 		$datapost['url'] = "https://www.facebook.com/{$datapost['postid']}";
@@ -345,15 +345,15 @@ Class Worker
 
 		$delay_default = 10;
 		$delay = 10;
-		$delayfeed_default = 60;
-		$delayfeed = 60;
+		$delayfeed_default = 10;
+		$delayfeed = 10;
 
 		/* Call Class */
 		$Working = new FacebookAutoReactGroup();
 		$Working->Auth($data);
 
 		$nofeed = 0;
-		$likepost = 0;
+		$ReactPost = 0;
 		while (true) {
 
 			/* when nofeed 5 reset sleep value to default */
@@ -376,19 +376,19 @@ Class Worker
 
 			foreach ($FeedList as $key => $post) {
 
-				/* when likepost 5 reset sleep value to default */
-				if ($likepost >= 5) {
+				/* when ReactPost 5 reset sleep value to default */
+				if ($ReactPost >= 5) {
 					$delay = $delay_default;
-					$likepost = 0;
+					$ReactPost = 0;
 				}	
 
-				$Working->LikePost($post);
+				$Working->ReactPost($post);
 
 				echo "Delay {$delay} <--------------".PHP_EOL;
 				sleep($delay);
 
 				$delay = $delay+5;
-				$likepost++;
+				$ReactPost++;
 			}
 
 		}		

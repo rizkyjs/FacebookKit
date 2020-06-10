@@ -60,20 +60,26 @@ Class InputHelper
 
 	public function GetInputReact($data = false) {
 
+		if (strtoupper($data) == 'RANDOM') {
+			$reactlist = ['LIKE', 'LOVE', 'CARE', 'WOW'];
+			return $reactlist[array_rand($reactlist)];
+		}
+
 		if ($data) return $data;
 
-		echo "Masukan Reaksi yang dikirim : [LIKE, LOVE, CARE, HAHA, WOW, SAD, ANGRY, UNREACT]".PHP_EOL;
+		echo "Masukan Reaksi yang dikirim : [LIKE, LOVE, CARE, HAHA, WOW, SAD, ANGRY, RANDOM]".PHP_EOL;
 
 		$input = strtoupper(trim(fgets(STDIN)));
 
-		$react = ['LIKE', 'LOVE', 'CARE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'UNREACT'];
+		$react = ['LIKE', 'LOVE', 'CARE', 'HAHA', 'WOW', 'SAD', 'ANGRY', 'RANDOM'];
 
 		if (!in_array($input,$react)) {
 			die("Reaksi Pilihan tidak valid".PHP_EOL);
 		}
 
+
 		return (!$input) ? die('Reaction Masih Kosong'.PHP_EOL) : $input;
-	}	
+	}		
 }
 
 Class FacebookAutoReactTimeLine
@@ -91,7 +97,7 @@ Class FacebookAutoReactTimeLine
 		echo "Check Login <-------------".PHP_EOL;
 
 		$userid = FacebookCookie::GetUIDCookie($data['cookie']);
-
+		
 		if (!$userid) {
 			$results = self::ReadPreviousCookie($data['cookie']);
 		}else{			
@@ -188,18 +194,19 @@ Class FacebookAutoReactTimeLine
 		return self::SyncPost($results);
 	}
 
-	public function LikePost($datapost)
+	public function ReactPost($datapost)
 	{
-		echo "Proses React Post {$datapost['userid']}||{$datapost['postid']} <-------------".PHP_EOL;
-
 		$datapost['url'] = "https://www.facebook.com/{$datapost['postid']}";
-		
+		$type = ($this->react == 'RANDOM') ? InputHelper::GetInputReact('RANDOM') : $this->react;
+
+		echo "Proses React {$type} Post {$datapost['userid']}||{$datapost['postid']} <-------------".PHP_EOL;
+
 		$react = new FacebookPostReaction();
 		$react->Auth($this->cookie,'cookie');
 		$process = $react->ReactPostByScraping([
 			'userid' => $datapost['userid'], 
 			'postid' => $datapost['postid'], 
-			'type' => $this->react
+			'type' => $type
 			]);
 
 		if ($process != false) {
@@ -277,7 +284,7 @@ Class Worker
 		$Working->Auth($data);
 
 		$nofeed = 0;
-		$likepost = 0;
+		$ReactPost = 0;
 		while (true) {
 
 			/* when nofeed 5 reset sleep value to default */
@@ -300,19 +307,19 @@ Class Worker
 
 			foreach ($FeedList as $key => $post) {
 
-				/* when likepost 5 reset sleep value to default */
-				if ($likepost >= 5) {
+				/* when ReactPost 5 reset sleep value to default */
+				if ($ReactPost >= 5) {
 					$delay = $delay_default;
-					$likepost = 0;
+					$ReactPost = 0;
 				}	
 
-				$Working->LikePost($post);
+				$Working->ReactPost($post);
 
 				echo "Delay {$delay} <--------------".PHP_EOL;
 				sleep($delay);
 
 				$delay = $delay+5;
-				$likepost++;
+				$ReactPost++;
 			}
 
 		}		
